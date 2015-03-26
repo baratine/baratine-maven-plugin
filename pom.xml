@@ -12,7 +12,7 @@
 
   <modules>
     <module>archetype</module>
-    <!--module>bar-plugin</module-->
+    <module>bar-plugin</module>
   </modules>
 
 </project>

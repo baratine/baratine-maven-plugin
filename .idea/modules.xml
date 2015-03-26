@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/archetype/archetype.iml" filepath="$PROJECT_DIR$/archetype/archetype.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bar-plugin/bar-plugin.iml" filepath="$PROJECT_DIR$/bar-plugin/bar-plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/maven-plugin.iml" filepath="$PROJECT_DIR$/maven-plugin.iml" />
+    </modules>
+  </component>
+</project>
