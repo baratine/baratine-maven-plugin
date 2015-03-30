@@ -19,9 +19,9 @@ import org.codehaus.plexus.archiver.jar.JarArchiver;
 
 import java.io.File;
 
-@Mojo(name = "baratine", defaultPhase = LifecyclePhase.PACKAGE, requiresProject = true, threadSafe = true,
+@Mojo(name = "baratineExploded", defaultPhase = LifecyclePhase.PACKAGE, requiresProject = true, threadSafe = true,
   requiresDependencyResolution = ResolutionScope.RUNTIME)
-public class BarMojo extends AbstractMojo
+public class BarMojoX extends AbstractMojo
 {
   private static final String[] excludes = new String[]{};
 
@@ -160,9 +160,9 @@ public class BarMojo extends AbstractMojo
 
   public void execute() throws MojoExecutionException, MojoFailureException
   {
-    File bar = createBar();
+    File file = new File(_outputDirectory, _project.getArtifactId());
 
-    getProject().getArtifact().setFile(bar);
+    file.mkdir();
   }
 
   private String[] getIncludes()

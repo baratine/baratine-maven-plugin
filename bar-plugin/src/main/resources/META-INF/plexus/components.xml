@@ -4,7 +4,7 @@
 
     <component>
       <role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
-      <role-hint>bar</role-hint>
+      <role-hint>baratine</role-hint>
       <implementation>
         org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping
       </implementation>
@@ -14,35 +14,34 @@
             <id>default</id>
             <phases>
               <process-resources>
-                org.apache.maven.plugins:maven-resources-plugin:2.6:resources
+                org.apache.maven.plugins:maven-resources-plugin:resources
               </process-resources>
               <compile>
-                org.apache.maven.plugins:maven-compiler-plugin:2.5.1:compile
+                org.apache.maven.plugins:maven-compiler-plugin:compile
               </compile>
               <process-test-resources>
-                org.apache.maven.plugins:maven-resources-plugin:2.6:testResources
+                org.apache.maven.plugins:maven-resources-plugin:testResources
               </process-test-resources>
               <test-compile>
-                org.apache.maven.plugins:maven-compiler-plugin:2.5.1:testCompile
+                org.apache.maven.plugins:maven-compiler-plugin:testCompile
               </test-compile>
               <test>
-                org.apache.maven.plugins:maven-surefire-plugin:2.12.4:test
+                org.apache.maven.plugins:maven-surefire-plugin:test
               </test>
               <package>
-                io.baratine:bar-plugin:1.0:bar
+                io.baratine:bar-plugin:baratineExploded,
+                io.baratine:bar-plugin:baratine
               </package>
               <install>
-                org.apache.maven.plugins:maven-install-plugin:2.4:install
+                org.apache.maven.plugins:maven-install-plugin:install
               </install>
               <deploy>
-                org.apache.maven.plugins:maven-deploy-plugin:2.7:deploy
+                org.apache.maven.plugins:maven-deploy-plugin:deploy
               </deploy>
             </phases>
-
           </lifecycle>
         </lifecycles>
       </configuration>
     </component>
-
   </components>
 </component-set>
