@@ -17,11 +17,11 @@ This will install the archetype and plugin into your local repository
 
 A Baratine project can be generated using the following Maven command:
 
-  mvn archetype:generate -DarchetypeGroupId=io.baratine \
-  -DarchetypeArtifactId=maven-archetype-baratine \
-  -DgroupId=org.acme -DartifactId=MyApp \
-  -DarchetypeVersion=1.0-SNAPSHOT \
-  -DinteractiveMode=false
+`mvn archetype:generate -DarchetypeGroupId=io.baratine \
+-DarchetypeArtifactId=maven-archetype-baratine \
+-DgroupId=org.acme -DartifactId=MyApp \
+-DarchetypeVersion=1.0-SNAPSHOT \
+-DinteractiveMode=false`
 
 
 ## Building Baratine Project
@@ -32,7 +32,7 @@ directory structure.
 baratine-plugin provides support for building baratine deployment files (.bar) 
 via defining support for maven baratine packaging.
 
-For default Maven pom.xml for Baratine see: 
+For default Maven pom.xml for Baratine see [pom.xml] 
  
-https://github.com/baratine/maven-collection-baratine/blob/master/baratine-archetype/src/main/resources/archetype-resources/pom.xml
+[pom.xml]: https://github.com/baratine/maven-collection-baratine/blob/master/baratine-archetype/src/main/resources/archetype-resources/pom.xml Baratine Maven Project
 
