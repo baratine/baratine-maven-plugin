@@ -3,7 +3,7 @@
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
     <excludeFromCompile>
-      <directory url="file://$PROJECT_DIR$/archetype/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/baratine-archetype/src/main/resources/archetype-resources" includeSubdirectories="true" />
     </excludeFromCompile>
     <resourceExtensions />
     <wildcardResourcePatterns>
@@ -28,11 +28,15 @@
         <processorPath useClasspath="true" />
         <module name="archetype" />
         <module name="bar-plugin" />
+        <module name="baratine-archetype" />
+        <module name="baratine-plugin" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="archetype" target="1.5" />
       <module name="bar-plugin" target="1.5" />
+      <module name="baratine-archetype" target="1.5" />
+      <module name="baratine-plugin" target="1.5" />
       <module name="maven-plugin" target="1.5" />
     </bytecodeTargetLevel>
   </component>

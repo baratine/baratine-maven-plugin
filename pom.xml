@@ -6,13 +6,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.baratine</groupId>
-  <artifactId>maven-plugin</artifactId>
+  <artifactId>maven-collection-baratine</artifactId>
   <packaging>pom</packaging>
   <version>0.8.8</version>
 
   <modules>
-    <module>archetype</module>
-    <module>bar-plugin</module>
+    <module>baratine-archetype</module>
+    <module>baratine-plugin</module>
   </modules>
 
 </project>
