@@ -1,9 +1,8 @@
 # maven-plugin
 Collection of Maven plugins and archetypes that work with Baratine™
 
-## Contents
-### baratine-archetype
-### baratine-plugin
-
+baratine-archetype supports generating maven projects for Baratine.
+  
+baratine-plugin defines lifecycle foro baratine projects. 
 
 
