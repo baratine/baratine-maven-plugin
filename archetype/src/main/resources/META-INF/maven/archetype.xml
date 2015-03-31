@@ -1,9 +1,11 @@
 <archetype>
   <id>archetype</id>
   <sources>
-    <source>src/main/java/App.java</source>
+    <source>src/main/java/EchoService.java</source>
+    <source>src/main/java/EchoServiceImpl.java</source>
   </sources>
   <testSources>
-    <source>src/test/java/AppTest.java</source>
+    <source>src/test/java/EchoServiceSync.java</source>
+    <source>src/test/java/EchoTest.java</source>
   </testSources>
 </archetype>
