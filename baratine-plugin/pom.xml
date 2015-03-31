@@ -69,7 +69,7 @@
                 <goal>clean</goal>
                 <goal>package</goal>
               </goals>
-
+              <settingsFile>src/it/settings.xml</settingsFile>
               <postBuildHookScript>verify</postBuildHookScript>
             </configuration>
             <executions>

@@ -23,7 +23,7 @@ import java.io.File;
   requiresDependencyResolution = ResolutionScope.RUNTIME)
 public class BaratineMojo extends AbstractMojo
 {
-  private static final String[] EXCLUDES = new String[]{};
+  private static final String[] EXCLUDES = new String[]{"META-INF/baratine/**"};
 
   private static final String[] INCLUDES = new String[]{"**/**"};
 
@@ -89,23 +89,44 @@ public class BaratineMojo extends AbstractMojo
                                           getIncludes(),
                                           getExcludes());
 
+      String baratineMetaName = "META-INF"
+                                + File.separatorChar
+                                + "baratine";
+
+      File baratineMeta = new File(contentDirectory, baratineMetaName);
+
+      if (baratineMeta.exists())
+        archiver.getArchiver().addDirectory(baratineMeta,
+                                            baratineMetaName
+                                            + File.separatorChar);
+
       for (Object obj : project.getArtifacts()) {
         Artifact a = (Artifact) obj;
 
-        if (! includeBaratine && "io.baratine".equals(a.getGroupId()))
+        if (!"jar".equals(a.getType()))
           continue;
 
-        if ("jar".equals(a.getType())) {
-          File file = a.getFile();
-          String name = file.getName();
+        if (!includeBaratine && "io.baratine".equals(a.getGroupId())) {
+          getLog().info("skipping artifact "
+                        + a.getId()
+                        + ':'
+                        + a.getArtifactId()
+                        + ':'
+                        + a.getSelectedVersion());
 
-          int lastSlash = name.lastIndexOf(File.separator);
-
-          if (lastSlash > -1)
-            name = name.substring(lastSlash + 1);
-
-          archiver.getArchiver().addFile(file, name);
+          continue;
         }
+
+        File file = a.getFile();
+        String name = file.getName();
+
+        int lastSlash = name.lastIndexOf(File.separator);
+
+        if (lastSlash > -1)
+          name = name.substring(lastSlash + 1);
+
+        archiver.getArchiver().addFile(file, name);
+
       }
 
       archiver.createArchive(session, project, archive);
