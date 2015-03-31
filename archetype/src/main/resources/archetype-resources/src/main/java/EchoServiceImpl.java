@@ -1,4 +1,4 @@
-package $package;
+package ${package};
 
 import io.baratine.core.Result;
 import io.baratine.core.Service;

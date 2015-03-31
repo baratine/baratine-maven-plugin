@@ -1,4 +1,4 @@
-package $package;
+package ${package};
 
 import com.caucho.junit.ConfigurationBaratine;
 import com.caucho.junit.RunnerBaratine;
