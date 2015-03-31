@@ -19,6 +19,8 @@ A Baratine project can be generated using the following Maven command:
 
 `mvn archetype:generate -DarchetypeGroupId=io.baratine -DarchetypeArtifactId=maven-archetype-baratine -DgroupId=org.acme -DartifactId=MyApp -DarchetypeVersion=1.0-SNAPSHOT -DinteractiveMode=false`
 
+Note: change org.acme and MyApp to desired groupId and artifactId.
+
 ## Building Baratine Project
 
 Baratine requires special packaging which, similarly to a .war, adopts a specific 
