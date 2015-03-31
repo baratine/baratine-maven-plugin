@@ -1,0 +1,55 @@
+import java.io.*;
+import java.util.*;
+import java.util.jar.*;
+import org.codehaus.plexus.util.*;
+
+boolean result = true;
+
+try
+{
+    File target = new File( basedir, "target" );
+    if ( !target.exists() || ! target.isDirectory() )
+    {
+        System.err.println( "target file is missing or not a directory." );
+        return false;
+    }
+
+    File artifact = new File( target, "T0000-1.0-SNAPSHOT.bar" );
+    if ( !artifact.exists() || artifact.isDirectory() )
+    {
+        System.err.println( "artifact file is missing or a directory." );
+        return false;
+    }
+
+    JarFile jar = new JarFile( artifact );
+    Enumeration jarEntries = jar.entries();
+    while ( jarEntries.hasMoreElements() )
+    {
+        JarEntry entry = (JarEntry) jarEntries.nextElement();
+        if ( !entry.isDirectory() )
+        {
+            // Only compare files
+            if ( entry.getName().equals( "META-INF/MANIFEST.MF" ) )
+            {
+            	String manifest = IOUtil.toString( jar.getInputStream ( entry ) );
+            	int index = manifest.indexOf( "Class-Path: config/" );
+            	if ( index <= 0 )
+            	{	
+            		System.err.println( "MANIFEST doesn't contain: Class-Path: config/" );
+            		return false;
+            	}
+            	return true;
+            }
+        }
+    }
+
+    System.err.println( "MANIFEST.MF not found" );
+    return false;
+}
+catch( Throwable e )
+{
+    e.printStackTrace();
+    result = false;
+}
+
+return result;

@@ -1,5 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
@@ -12,7 +13,9 @@
   <artifactId>baratine-plugin</artifactId>
   <version>1.0-SNAPSHOT</version>
   <name>Baratine Plugin</name>
-  <url>https://github.com/baratine/maven-collection-baratine/tree/master/baratine-plugin</url>
+  <url>
+    https://github.com/baratine/maven-collection-baratine/tree/master/baratine-plugin
+  </url>
   <packaging>maven-plugin</packaging>
 
   <dependencies>
@@ -52,5 +55,36 @@
       <version>2.2.1</version>
     </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>run-its</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-invoker-plugin</artifactId>
+            <configuration>
+              <goals>
+                <goal>clean</goal>
+                <goal>package</goal>
+              </goals>
+
+              <postBuildHookScript>verify</postBuildHookScript>
+            </configuration>
+            <executions>
+              <execution>
+                <id>integration-test</id>
+                <goals>
+                  <goal>install</goal>
+                  <goal>integration-test</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>

@@ -92,6 +92,9 @@ public class BaratineMojo extends AbstractMojo
       for (Object obj : project.getArtifacts()) {
         Artifact a = (Artifact) obj;
 
+        if (! includeBaratine && "io.baratine".equals(a.getGroupId()))
+          continue;
+
         if ("jar".equals(a.getType())) {
           File file = a.getFile();
           String name = file.getName();
