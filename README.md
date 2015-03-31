@@ -32,7 +32,5 @@ directory structure.
 baratine-plugin provides support for building baratine deployment files (.bar) 
 via defining support for maven baratine packaging.
 
-For default Maven pom.xml for Baratine see [pom.xml] [1] 
+For default Maven pom.xml for Baratine see [pom.xml] (https://github.com/baratine/maven-collection-baratine/blob/master/baratine-archetype/src/main/resources/archetype-resources/pom.xml)
  
-[1]: https://github.com/baratine/maven-collection-baratine/blob/master/baratine-archetype/src/main/resources/archetype-resources/pom.xml Baratine Maven Project
-
