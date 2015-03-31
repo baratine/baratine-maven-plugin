@@ -8,7 +8,7 @@
   <groupId>io.baratine</groupId>
   <artifactId>maven-collection-baratine</artifactId>
   <packaging>pom</packaging>
-  <version>0.8.8</version>
+  <version>1.0-SNAPSHOT</version>
   <url>https://github.com/baratine/maven-collection-baratine</url>
 
   <modules>
