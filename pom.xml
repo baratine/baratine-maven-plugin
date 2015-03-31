@@ -9,6 +9,7 @@
   <artifactId>maven-collection-baratine</artifactId>
   <packaging>pom</packaging>
   <version>0.8.8</version>
+  <url>https://github.com/baratine/maven-collection-baratine</url>
 
   <modules>
     <module>baratine-archetype</module>

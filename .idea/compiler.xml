@@ -37,6 +37,7 @@
       <module name="bar-plugin" target="1.5" />
       <module name="baratine-archetype" target="1.5" />
       <module name="baratine-plugin" target="1.5" />
+      <module name="maven-collection-baratine" target="1.5" />
       <module name="maven-plugin" target="1.5" />
     </bytecodeTargetLevel>
   </component>

@@ -29,8 +29,7 @@
                 org.apache.maven.plugins:maven-surefire-plugin:test
               </test>
               <package>
-                io.baratine:bar-plugin:baratineExploded,
-                io.baratine:bar-plugin:baratine
+                io.baratine:baratine-plugin:baratine
               </package>
               <install>
                 org.apache.maven.plugins:maven-install-plugin:install

@@ -44,7 +44,7 @@
       </plugin>
       <plugin>
         <groupId>io.baratine</groupId>
-        <artifactId>bar-plugin</artifactId>
+        <artifactId>baratine-plugin</artifactId>
         <version>1.0-SNAPSHOT</version>
         <extensions>true</extensions>
       </plugin>
