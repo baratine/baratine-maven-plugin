@@ -17,11 +17,11 @@ This will install the archetype and plugin into your local repository
 
 A Baratine project can be generated using the following Maven command:
 
-mvn archetype:generate -DarchetypeGroupId=io.baratine \
--DarchetypeArtifactId=maven-archetype-baratine \
--DgroupId=org.acme -DartifactId=MyApp \
--DarchetypeVersion=1.0-SNAPSHOT \
--DinteractiveMode=false
+  mvn archetype:generate -DarchetypeGroupId=io.baratine \
+  -DarchetypeArtifactId=maven-archetype-baratine \
+  -DgroupId=org.acme -DartifactId=MyApp \
+  -DarchetypeVersion=1.0-SNAPSHOT \
+  -DinteractiveMode=false
 
 
 ## Building Baratine Project
