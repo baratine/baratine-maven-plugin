@@ -84,10 +84,10 @@ public class BaratineMojo extends AbstractMojo
 
     try {
       File contentDirectory = getClassesDirectory();
-      archiver.getArchiver().addDirectory(contentDirectory,
-                                          "classes/",
-                                          getIncludes(),
-                                          getExcludes());
+      this.archiver.addDirectory(contentDirectory,
+                                 "classes/",
+                                 getIncludes(),
+                                 getExcludes());
 
       String baratineMetaName = "META-INF"
                                 + File.separatorChar
@@ -96,9 +96,9 @@ public class BaratineMojo extends AbstractMojo
       File baratineMeta = new File(contentDirectory, baratineMetaName);
 
       if (baratineMeta.exists())
-        archiver.getArchiver().addDirectory(baratineMeta,
-                                            baratineMetaName
-                                            + File.separatorChar);
+        this.archiver.addDirectory(baratineMeta,
+                                   baratineMetaName
+                                   + File.separatorChar);
 
       for (Object obj : project.getArtifacts()) {
         Artifact a = (Artifact) obj;
@@ -125,8 +125,7 @@ public class BaratineMojo extends AbstractMojo
         if (lastSlash > -1)
           name = name.substring(lastSlash + 1);
 
-        archiver.getArchiver().addFile(file, name);
-
+        this.archiver.addFile(file, "lib/" + name);
       }
 
       archiver.createArchive(session, project, archive);
