@@ -128,6 +128,16 @@ public class BaratineMojo extends AbstractMojo
         this.archiver.addFile(file, "lib/" + name);
       }
 
+      File web = new File(project.getBasedir(),
+                          "src"
+                          + File.separatorChar
+                          + "main"
+                          + File.separatorChar
+                          + "web");
+
+      if (web.exists())
+        this.archiver.addDirectory(web, "web/");
+
       archiver.createArchive(session, project, archive);
 
       return bar;
