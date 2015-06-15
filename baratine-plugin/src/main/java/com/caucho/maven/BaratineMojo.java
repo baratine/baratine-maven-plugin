@@ -19,13 +19,27 @@ import org.codehaus.plexus.archiver.jar.JarArchiver;
 
 import java.io.File;
 
-@Mojo(name = "baratine", defaultPhase = LifecyclePhase.PACKAGE, requiresProject = true, threadSafe = true,
-  requiresDependencyResolution = ResolutionScope.RUNTIME)
+@Mojo(name = "baratine", defaultPhase = LifecyclePhase.PACKAGE,
+      requiresProject = true, threadSafe = true,
+      requiresDependencyResolution = ResolutionScope.RUNTIME)
 public class BaratineMojo extends AbstractMojo
 {
   private static final String[] EXCLUDES = new String[]{"META-INF/baratine/**"};
 
   private static final String[] INCLUDES = new String[]{"**/**"};
+
+  @Parameter(defaultValue = "${project}", readonly = true, required = true)
+  private MavenProject project;
+
+  @Parameter(defaultValue = "${session}", readonly = true, required = true)
+  private MavenSession session;
+
+  @Parameter(defaultValue = "${project.build.directory}", required = true)
+  private File outputDirectory;
+
+  @Parameter(alias = "barName", property = "bar.finalName",
+             defaultValue = "${project.build.finalName}")
+  private String barName;
 
   @Parameter
   private String[] includes;
@@ -36,20 +50,8 @@ public class BaratineMojo extends AbstractMojo
   @Parameter
   private boolean includeBaratine = false;
 
-  @Parameter(defaultValue = "${project.build.directory}", required = true)
-  private File outputDirectory;
-
-  @Parameter(alias = "barName", property = "bar.finalName", defaultValue = "${project.build.finalName}")
-  private String barName;
-
   @Component(role = Archiver.class, hint = "jar")
   private JarArchiver archiver;
-
-  @Parameter(defaultValue = "${project}", readonly = true, required = true)
-  private MavenProject project;
-
-  @Parameter(defaultValue = "${session}", readonly = true, required = true)
-  private MavenSession session;
 
   @Parameter()
   private MavenArchiveConfiguration archive = new MavenArchiveConfiguration();
