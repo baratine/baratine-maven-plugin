@@ -149,10 +149,9 @@ class StreamPiper implements Runnable
   {
     byte[] buffer = new byte[256];
 
-    int i = 0;
+    int i ;
 
     try {
-
       while ((i = _in.read(buffer)) > 0) {
         _out.write(buffer, 0, i);
         _out.flush();
