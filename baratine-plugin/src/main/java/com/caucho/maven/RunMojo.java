@@ -85,7 +85,7 @@ public class RunMojo extends AbstractMojo
       out.write(("deploy " + getBarLocation() + "\n").getBytes());
       out.flush();
 
-      getLog().info("baratine terminated: " + process.waitFor());
+      getLog().info("Baratine terminated: " + process.waitFor());
     } catch (Exception e) {
       String message = String.format("exception running baratine %1$s",
                                      e.getMessage());
@@ -149,7 +149,7 @@ class StreamPiper implements Runnable
   {
     byte[] buffer = new byte[256];
 
-    int i ;
+    int i;
 
     try {
       while ((i = _in.read(buffer)) > 0) {
