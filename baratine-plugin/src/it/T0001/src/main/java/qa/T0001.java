@@ -2,7 +2,7 @@ package qa;
 
 import io.baratine.core.*;
 
-@Service("public:///tes")
+@Service("public:///T0001")
 public class T0001 {
 
 }
