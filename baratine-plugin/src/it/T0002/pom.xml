@@ -5,8 +5,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.baratine</groupId>
-  <artifactId>T0001</artifactId>
-  <name>T0001</name>
+  <artifactId>T0002</artifactId>
+  <name>T0002</name>
   <version>1.0-SNAPSHOT</version>
   <url>http://maven.apache.org</url>
   <packaging>baratine</packaging>
@@ -45,6 +45,22 @@
         <artifactId>baratine-plugin</artifactId>
         <version>1.0-SNAPSHOT</version>
         <extensions>true</extensions>
+
+        <configuration>
+          <port>8086</port>
+          <workDir>/tmp/crap</workDir>
+          <script>
+            ls /proc
+
+            ls /proc/pods
+
+            cat /proc/servers
+
+            jamp-query /T0002 test
+
+          </script>
+        </configuration>
+
       </plugin>
     </plugins>
   </build>

@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -43,6 +44,16 @@ public class RunMojo extends AbstractMojo
   @Parameter(alias = "barName", property = "bar.finalName",
              defaultValue = "${project.build.finalName}")
   private String barName;
+
+  @Parameter
+  private String script;
+
+  @Parameter(defaultValue = "8085", property = "baratine.port")
+  private int port;
+
+  @Parameter(defaultValue = "${java.io.tmpdir}/baratine",
+             property = "baratine.workDir")
+  private String workDir;
 
   public void execute() throws MojoExecutionException, MojoFailureException
   {
@@ -77,13 +88,53 @@ public class RunMojo extends AbstractMojo
       x.submit(new StreamPiper(err, System.err));
       x.submit(new StreamPiper(System.in, out));
 
-      out.write("start -bg\n".getBytes());
-      out.flush();
+      String cmd = String.format("start -bg --root-dir %1$s -p %2$d\n",
+                                 this.workDir,
+                                 this.port);
 
+      out.write(cmd.getBytes());
+      out.flush();
       Thread.sleep(2 * 1000);
 
-      out.write(("deploy " + getBarLocation() + "\n").getBytes());
+      cmd = String.format("deploy %1$s\n", getBarLocation());
+
+      out.write(cmd.getBytes());
       out.flush();
+      Thread.sleep(2 * 1000);
+
+      if (script != null) {
+        byte[] buffer = script.getBytes(StandardCharsets.UTF_8);
+
+        int i = 0;
+
+        for (; i < buffer.length && buffer[i] == ' '; i++) ;
+
+        int start = i;
+
+        getLog().info("running Baratine Script");
+
+        for (; i < buffer.length; i++) {
+          if (buffer[i] == '\n' || i == buffer.length - 1) {
+            int len = i - start;
+            if (i == buffer.length - 1)
+              len += 1;
+
+            String scriptCmd = new String(buffer, start, len);
+            getLog().info("baratine>" + scriptCmd);
+
+            out.write((scriptCmd + '\n').getBytes());
+            out.flush();
+            Thread.sleep(400);
+
+            for (;
+                 i < buffer.length && (buffer[i] == ' ' || buffer[i] == '\n');
+                 i++)
+              ;
+
+            start = i;
+          }
+        }
+      }
 
       getLog().info("Baratine terminated: " + process.waitFor());
     } catch (Exception e) {
@@ -104,30 +155,24 @@ public class RunMojo extends AbstractMojo
 
   private String getBarLocation() throws MojoExecutionException
   {
-    File bar;
+    String id = project.getArtifactId();
 
-    if (barName.endsWith("-SNAPSHOT")) {
-      String copy = barName.substring(0, barName.length() - 9);
-      Path source = FileSystems.getDefault()
-                               .getPath(outputDirectory.getAbsolutePath(),
-                                        barName + ".bar");
-      Path to = FileSystems.getDefault()
-                           .getPath(outputDirectory.getAbsolutePath(),
-                                    copy + ".bar");
-      try {
-        Files.copy(source, to, StandardCopyOption.REPLACE_EXISTING);
-      } catch (IOException e) {
-        String message = String.format("error copying file %1$s %2$s",
-                                       source,
-                                       to);
-        throw new MojoExecutionException(message, e);
-      }
+    Path source = FileSystems.getDefault()
+                             .getPath(outputDirectory.getAbsolutePath(),
+                                      barName + ".bar");
+    Path to = FileSystems.getDefault()
+                         .getPath(outputDirectory.getAbsolutePath(),
+                                  id + ".bar");
+    try {
+      Files.copy(source, to, StandardCopyOption.REPLACE_EXISTING);
+    } catch (IOException e) {
+      String message = String.format("error copying file %1$s %2$s",
+                                     source,
+                                     to);
+      throw new MojoExecutionException(message, e);
+    }
 
-      bar = to.toFile();
-    }
-    else {
-      bar = new File(outputDirectory, barName + ".bar");
-    }
+    File bar = to.toFile();
 
     return bar.getAbsolutePath();
   }
