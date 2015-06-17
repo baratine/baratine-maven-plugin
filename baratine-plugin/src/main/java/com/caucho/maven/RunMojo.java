@@ -2,7 +2,6 @@ package com.caucho.maven;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.execution.MavenSession;
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -16,10 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,20 +24,10 @@ import java.util.concurrent.TimeUnit;
 
 @Mojo(name = "run", defaultPhase = LifecyclePhase.NONE, requiresProject = true,
       threadSafe = true, requiresDependencyResolution = ResolutionScope.RUNTIME)
-public class RunMojo extends AbstractMojo
+public class RunMojo extends BaratineExecutableMojo
 {
-  @Parameter(defaultValue = "${project}", readonly = true, required = true)
-  private MavenProject project;
-
   @Parameter(defaultValue = "${session}", readonly = true, required = true)
   private MavenSession session;
-
-  @Parameter(defaultValue = "${project.build.directory}", required = true)
-  private File outputDirectory;
-
-  @Parameter(alias = "barName", property = "bar.finalName",
-             defaultValue = "${project.build.finalName}")
-  private String barName;
 
   @Parameter
   private String script;
@@ -74,10 +59,11 @@ public class RunMojo extends AbstractMojo
     command.add("com.caucho.cli.baratine.BaratineCommandLine");
 
     ExecutorService x = Executors.newFixedThreadPool(3);
+    Process process = null;
 
     try {
       ProcessBuilder processBuilder = new ProcessBuilder(command);
-      Process process = processBuilder.start();
+      process = processBuilder.start();
 
       InputStream in = process.getInputStream();
       InputStream err = process.getErrorStream();
@@ -141,39 +127,23 @@ public class RunMojo extends AbstractMojo
                                      e.getMessage());
       throw new MojoExecutionException(message, e);
     } finally {
-      x.shutdown();
       try {
+        x.shutdown();
         x.awaitTermination(1, TimeUnit.SECONDS);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
+      } catch (Throwable t) {
       } finally {
         x.shutdownNow();
       }
+
+      try {
+        if (process != null)
+          process.waitFor(2, TimeUnit.SECONDS);
+      } catch (Throwable t) {
+      } finally {
+        if (process.isAlive())
+          process.destroyForcibly();
+      }
     }
-  }
-
-  private String getBarLocation() throws MojoExecutionException
-  {
-    String id = project.getArtifactId();
-
-    Path source = FileSystems.getDefault()
-                             .getPath(outputDirectory.getAbsolutePath(),
-                                      barName + ".bar");
-    Path to = FileSystems.getDefault()
-                         .getPath(outputDirectory.getAbsolutePath(),
-                                  id + ".bar");
-    try {
-      Files.copy(source, to, StandardCopyOption.REPLACE_EXISTING);
-    } catch (IOException e) {
-      String message = String.format("error copying file %1$s %2$s",
-                                     source,
-                                     to);
-      throw new MojoExecutionException(message, e);
-    }
-
-    File bar = to.toFile();
-
-    return bar.getAbsolutePath();
   }
 
   static class StreamPiper implements Runnable
