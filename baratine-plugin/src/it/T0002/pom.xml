@@ -48,7 +48,7 @@
 
         <configuration>
           <port>8086</port>
-          <workDir>/tmp/crap</workDir>
+          <workDir>/tmp/baratine-T0002</workDir>
           <script>
             ls /proc
 
@@ -58,10 +58,24 @@
 
             jamp-query /T0002 test
 
+            stop
+
+            exit
+
           </script>
         </configuration>
 
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
+
+
     </plugins>
   </build>
 

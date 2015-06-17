@@ -27,9 +27,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-@Mojo(name = "run", defaultPhase = LifecyclePhase.NONE, requiresProject = true,
-      threadSafe = true, requiresDependencyResolution = ResolutionScope.RUNTIME)
-public class RunMojo extends AbstractMojo
+@Mojo(name = "deploy", defaultPhase = LifecyclePhase.NONE,
+      requiresProject = true, threadSafe = true,
+      requiresDependencyResolution = ResolutionScope.RUNTIME)
+public class DeployMojo extends AbstractMojo
 {
   @Parameter(defaultValue = "${project}", readonly = true, required = true)
   private MavenProject project;
