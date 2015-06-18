@@ -1,5 +1,7 @@
 package com.caucho.maven;
 
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -11,9 +13,14 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 
 public abstract class BaratineExecutableMojo extends AbstractMojo
 {
+  private static final String baratineGroupId = "io.baratine";
+  private static final String baratineId = "baratine";
+  private static final String baratineApiId = "baratine-api";
+
   @Parameter(defaultValue = "${project}", readonly = true, required = true)
   protected MavenProject project;
 
@@ -48,4 +55,50 @@ public abstract class BaratineExecutableMojo extends AbstractMojo
     return bar.getAbsolutePath();
   }
 
+  public String getBaratine()
+  {
+    String path = getArtifact(baratineGroupId, baratineId);
+
+    if (path == null)
+      path = getDependency(baratineGroupId, baratineId);
+
+    return path;
+  }
+
+  public String getBaratineApi()
+  {
+    String path = getArtifact(baratineGroupId, baratineApiId);
+
+    if (path == null)
+      path = getDependency(baratineGroupId, baratineApiId);
+
+    return path;
+  }
+
+  private String getArtifact(String groupId, String artifactId)
+  {
+    Artifact a
+      = (Artifact) project.getArtifactMap().get(groupId + ':' + artifactId);
+
+    String path = null;
+    if (a != null)
+      path = a.getFile().getAbsolutePath();
+
+    return path;
+  }
+
+  private String getDependency(String groupId, String artifactId)
+  {
+    List dependencies = project.getDependencies();
+
+    for (int i = 0; i < dependencies.size(); i++) {
+      Dependency dependency = (Dependency) dependencies.get(i);
+      if (groupId.equals(dependency.getGroupId())
+          && artifactId.equals(dependency.getArtifactId())) {
+        return dependency.getSystemPath();
+      }
+    }
+
+    return null;
+  }
 }

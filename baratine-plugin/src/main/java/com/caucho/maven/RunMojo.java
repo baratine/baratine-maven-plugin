@@ -1,6 +1,5 @@
 package com.caucho.maven;
 
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -8,7 +7,6 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
-import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +15,6 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -39,16 +36,20 @@ public class RunMojo extends BaratineExecutableMojo
              property = "baratine.workDir")
   private String workDir;
 
+  @Parameter(property = "baratine.run.skip")
+  private boolean runSkip = false;
+
+  @Parameter(property = "baratine.run.verbose")
+  private boolean verbose = false;
+
   public void execute() throws MojoExecutionException, MojoFailureException
   {
-    Map artifacts = project.getArtifactMap();
+    if (runSkip)
+      return;
 
-    Artifact baratineApi = (Artifact) artifacts.get("io.baratine:baratine-api");
-    Artifact baratine = (Artifact) artifacts.get("io.baratine:baratine");
-
-    String cp = baratine.getFile().getAbsolutePath();
+    String cp = getBaratine();
     cp = cp + File.pathSeparatorChar;
-    cp = cp + baratineApi.getFile().getAbsolutePath();
+    cp = cp + getBaratineApi();
 
     String javaHome = System.getProperty("java.home");
 
@@ -73,9 +74,10 @@ public class RunMojo extends BaratineExecutableMojo
       x.submit(new StreamPiper(err, System.err));
       x.submit(new StreamPiper(System.in, out));
 
-      String cmd = String.format("start -bg --root-dir %1$s -p %2$d\n",
+      String cmd = String.format("start -bg --root-dir %1$s -p %2$d %3$s\n",
                                  this.workDir,
-                                 this.port);
+                                 this.port,
+                                 (verbose?"-vv":""));
 
       out.write(cmd.getBytes());
       out.flush();

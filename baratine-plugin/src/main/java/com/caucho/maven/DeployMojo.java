@@ -37,14 +37,9 @@ public class DeployMojo extends BaratineExecutableMojo
 
   public void execute() throws MojoExecutionException, MojoFailureException
   {
-    Map artifacts = project.getArtifactMap();
-
-    Artifact baratineApi = (Artifact) artifacts.get("io.baratine:baratine-api");
-    Artifact baratine = (Artifact) artifacts.get("io.baratine:baratine");
-
-    String cp = baratine.getFile().getAbsolutePath();
+    String cp = getBaratine();
     cp = cp + File.pathSeparatorChar;
-    cp = cp + baratineApi.getFile().getAbsolutePath();
+    cp = cp + getBaratineApi();
 
     String javaHome = System.getProperty("java.home");
 
