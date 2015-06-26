@@ -5,8 +5,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.baratine</groupId>
-  <artifactId>T0002</artifactId>
-  <name>T0002</name>
+  <artifactId>T0000</artifactId>
+  <name>T0000</name>
   <version>1.0-SNAPSHOT</version>
   <url>http://maven.apache.org</url>
   <packaging>baratine</packaging>
@@ -22,14 +22,14 @@
     <dependency>
       <groupId>io.baratine</groupId>
       <artifactId>baratine-api</artifactId>
-      <version>[0.9,)</version>
+      <version>0.8.8</version>
       <scope>compile</scope>
     </dependency>
 
     <dependency>
       <groupId>io.baratine</groupId>
       <artifactId>baratine</artifactId>
-      <version>[0.9,)</version>
+      <version>0.8.8</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
@@ -45,34 +45,6 @@
         <artifactId>baratine-plugin</artifactId>
         <version>1.0-SNAPSHOT</version>
         <extensions>true</extensions>
-
-        <configuration>
-          <port>8086</port>
-          <workDir>/tmp/baratine-T0002</workDir>
-          <script>
-            ls /proc
-
-            ls /proc/pods
-
-            cat /proc/servers
-
-            jamp-query /T0002 test
-
-            stop
-
-            exit
-
-          </script>
-        </configuration>
-
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>

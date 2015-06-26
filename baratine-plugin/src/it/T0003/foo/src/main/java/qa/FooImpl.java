@@ -1,11 +1,15 @@
 package qa;
 
+import javax.inject.*;
 import io.baratine.core.*;
 
-@Service("public://bar/bar-service")
-public class BarImpl
+@Service("public://foo/foo-service")
+public class FooImpl
 {
+  @Inject @Lookup("pod://bar/bar-service")
+  private Bar _bar;
+
   public void test(Result<String> result) {
-    result.complete("hello world!");
+    _bar.test(result);
   }
 }
