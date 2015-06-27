@@ -1,6 +1,8 @@
 package com.caucho.maven;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.execution.MavenSession;
+import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -15,6 +17,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -77,11 +80,21 @@ public class RunMojo extends BaratineExecutableMojo
       String cmd = String.format("start -bg --root-dir %1$s -p %2$d %3$s\n",
                                  this.workDir,
                                  this.port,
-                                 (verbose?"-vv":""));
+                                 (verbose ? "-vv" : ""));
 
       out.write(cmd.getBytes());
       out.flush();
       Thread.sleep(2 * 1000);
+
+      Set artifacts = project.getDependencyArtifacts();
+
+      for (Object a : artifacts) {
+        Artifact artifact = (Artifact) a;
+        if (!"bar".equals(artifact.getType())) continue;
+
+        artifact.getFile();
+
+      }
 
       cmd = String.format("deploy %1$s\n", getBarLocation());
 

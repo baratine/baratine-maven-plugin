@@ -4,7 +4,7 @@
 
     <component>
       <role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
-      <role-hint>baratine</role-hint>
+      <role-hint>bar</role-hint>
       <implementation>
         org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping
       </implementation>

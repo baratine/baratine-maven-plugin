@@ -1,5 +1,6 @@
 package com.caucho.maven;
 
+import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
@@ -55,6 +56,14 @@ public abstract class BaratineExecutableMojo extends AbstractMojo
     return bar.getAbsolutePath();
   }
 
+  protected String getDeployableBar(Artifact artifact) {
+    String source = artifact.getFile().getAbsolutePath();
+
+    String target = source.replace("-SNAPSHOT.", ".");
+
+    source =
+  }
+
   public String getBaratine()
   {
     String path = getArtifact(baratineGroupId, baratineId);
@@ -75,7 +84,7 @@ public abstract class BaratineExecutableMojo extends AbstractMojo
     return path;
   }
 
-  private String getArtifact(String groupId, String artifactId)
+  public String getArtifact(String groupId, String artifactId)
   {
     Artifact a
       = (Artifact) project.getArtifactMap().get(groupId + ':' + artifactId);
@@ -87,7 +96,7 @@ public abstract class BaratineExecutableMojo extends AbstractMojo
     return path;
   }
 
-  private String getDependency(String groupId, String artifactId)
+  public String getDependency(String groupId, String artifactId)
   {
     List dependencies = project.getDependencies();
 

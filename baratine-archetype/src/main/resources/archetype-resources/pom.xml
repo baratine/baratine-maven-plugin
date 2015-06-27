@@ -6,7 +6,7 @@
   <groupId>${groupId}</groupId>
   <artifactId>${artifactId}</artifactId>
   <version>${version}</version>
-  <packaging>baratine</packaging>
+  <packaging>bar</packaging>
 
   <properties>
     <encoding>UTF-8</encoding>
