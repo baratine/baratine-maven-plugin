@@ -2,7 +2,6 @@ package com.caucho.maven;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.execution.MavenSession;
-import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -23,7 +22,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @Mojo(name = "run", defaultPhase = LifecyclePhase.NONE, requiresProject = true,
-      threadSafe = true, requiresDependencyResolution = ResolutionScope.RUNTIME)
+  threadSafe = true, requiresDependencyResolution = ResolutionScope.RUNTIME)
 public class RunMojo extends BaratineExecutableMojo
 {
   @Parameter(defaultValue = "${session}", readonly = true, required = true)
@@ -36,7 +35,7 @@ public class RunMojo extends BaratineExecutableMojo
   private int port;
 
   @Parameter(defaultValue = "${java.io.tmpdir}/baratine",
-             property = "baratine.workDir")
+    property = "baratine.workDir")
   private String workDir;
 
   @Parameter(property = "baratine.run.skip")
@@ -90,10 +89,16 @@ public class RunMojo extends BaratineExecutableMojo
 
       for (Object a : artifacts) {
         Artifact artifact = (Artifact) a;
-        if (!"bar".equals(artifact.getType())) continue;
+        if (!"bar".equals(artifact.getType()))
+          continue;
 
-        artifact.getFile();
+        String file = getDeployableBar(artifact);
 
+        cmd = String.format("deploy %1$s\n", file);
+
+        out.write(cmd.getBytes());
+        out.flush();
+        Thread.sleep(2 * 1000);
       }
 
       cmd = String.format("deploy %1$s\n", getBarLocation());

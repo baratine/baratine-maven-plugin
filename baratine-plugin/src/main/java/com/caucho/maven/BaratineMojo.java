@@ -20,8 +20,8 @@ import org.codehaus.plexus.archiver.jar.JarArchiver;
 import java.io.File;
 
 @Mojo(name = "baratine", defaultPhase = LifecyclePhase.PACKAGE,
-      requiresProject = true, threadSafe = true,
-      requiresDependencyResolution = ResolutionScope.RUNTIME)
+  requiresProject = true, threadSafe = true,
+  requiresDependencyResolution = ResolutionScope.RUNTIME)
 public class BaratineMojo extends AbstractMojo
 {
   private static final String[] EXCLUDES = new String[]{"META-INF/baratine/**"};
@@ -38,7 +38,7 @@ public class BaratineMojo extends AbstractMojo
   private File outputDirectory;
 
   @Parameter(alias = "barName", property = "bar.finalName",
-             defaultValue = "${project.build.finalName}")
+    defaultValue = "${project.build.finalName}")
   private String barName;
 
   @Parameter
@@ -102,8 +102,8 @@ public class BaratineMojo extends AbstractMojo
                                    baratineMetaName
                                    + File.separatorChar);
 
-      for (Object obj : project.getArtifacts()) {
-        Artifact a = (Artifact) obj;
+      for (Object x : project.getDependencyArtifacts()) {
+        Artifact a = (Artifact) x;
 
         if (!"jar".equals(a.getType()))
           continue;

@@ -1,6 +1,5 @@
 package com.caucho.maven;
 
-import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
@@ -10,11 +9,15 @@ import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.CopyOption;
+import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class BaratineExecutableMojo extends AbstractMojo
 {
@@ -29,19 +32,21 @@ public abstract class BaratineExecutableMojo extends AbstractMojo
   protected File outputDirectory;
 
   @Parameter(alias = "barName", property = "bar.finalName",
-             defaultValue = "${project.build.finalName}")
+    defaultValue = "${project.build.finalName}")
   protected String barName;
+
+  private FileSystem _fileSystem = FileSystems.getDefault();
 
   protected String getBarLocation() throws MojoExecutionException
   {
     String id = project.getArtifactId();
 
-    Path source = FileSystems.getDefault()
-                             .getPath(outputDirectory.getAbsolutePath(),
-                                      barName + ".bar");
-    Path to = FileSystems.getDefault()
-                         .getPath(outputDirectory.getAbsolutePath(),
-                                  id + ".bar");
+    Path source
+      = _fileSystem.getPath(outputDirectory.getAbsolutePath(),
+                            barName + ".bar");
+    Path to
+      = _fileSystem.getPath(outputDirectory.getAbsolutePath(),
+                            id + ".bar");
     try {
       Files.copy(source, to, StandardCopyOption.REPLACE_EXISTING);
     } catch (IOException e) {
@@ -56,12 +61,23 @@ public abstract class BaratineExecutableMojo extends AbstractMojo
     return bar.getAbsolutePath();
   }
 
-  protected String getDeployableBar(Artifact artifact) {
-    String source = artifact.getFile().getAbsolutePath();
+  protected String getDeployableBar(Artifact artifact) throws IOException
+  {
+    final File sourceFile = artifact.getFile();
+    final String source = sourceFile.getName();
 
-    String target = source.replace("-SNAPSHOT.", ".");
+    Pattern p = Pattern.compile("\\-[\\.\\d+]+[-SNAPSHOT\\.]+");
 
-    source =
+    Matcher m = p.matcher(source);
+
+    String target = m.replaceAll(".");
+
+    Path from = _fileSystem.getPath(sourceFile.getAbsolutePath());
+    Path to = _fileSystem.getPath("/tmp", target);
+
+    Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
+
+    return to.toString();
   }
 
   public String getBaratine()
