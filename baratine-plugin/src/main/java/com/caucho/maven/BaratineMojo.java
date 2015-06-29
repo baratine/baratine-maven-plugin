@@ -102,7 +102,7 @@ public class BaratineMojo extends AbstractMojo
                                    baratineMetaName
                                    + File.separatorChar);
 
-      for (Object x : project.getDependencyArtifacts()) {
+      for (Object x : project.getArtifacts()) {
         Artifact a = (Artifact) x;
 
         if (!"jar".equals(a.getType()))

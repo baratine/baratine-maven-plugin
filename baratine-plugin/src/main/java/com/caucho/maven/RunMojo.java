@@ -31,13 +31,6 @@ public class RunMojo extends BaratineExecutableMojo
   @Parameter
   private String script;
 
-  @Parameter(defaultValue = "8085", property = "baratine.port")
-  private int port;
-
-  @Parameter(defaultValue = "${java.io.tmpdir}/baratine",
-    property = "baratine.workDir")
-  private String workDir;
-
   @Parameter(property = "baratine.run.skip")
   private boolean runSkip = false;
 
@@ -65,6 +58,8 @@ public class RunMojo extends BaratineExecutableMojo
     Process process = null;
 
     try {
+      cleanWorkDir();
+
       ProcessBuilder processBuilder = new ProcessBuilder(command);
       process = processBuilder.start();
 

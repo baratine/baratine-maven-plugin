@@ -9,13 +9,13 @@ import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.CopyOption;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,7 +35,14 @@ public abstract class BaratineExecutableMojo extends AbstractMojo
     defaultValue = "${project.build.finalName}")
   protected String barName;
 
-  private FileSystem _fileSystem = FileSystems.getDefault();
+  @Parameter(defaultValue = "8085", property = "baratine.port")
+  protected int port;
+
+  @Parameter(defaultValue = "${java.io.tmpdir}/baratine",
+    property = "baratine.workDir")
+  protected String workDir;
+
+  protected FileSystem _fileSystem = FileSystems.getDefault();
 
   protected String getBarLocation() throws MojoExecutionException
   {
@@ -125,5 +132,42 @@ public abstract class BaratineExecutableMojo extends AbstractMojo
     }
 
     return null;
+  }
+
+  public void cleanWorkDir() throws IOException
+  {
+    File workDir = new File(this.workDir);
+
+    File dir = new File(workDir, "data-" + port);
+
+    if (dir.exists())
+      delete(dir);
+
+    dir = new File(workDir, "log");
+
+    if (dir.exists())
+      delete(dir);
+  }
+
+  private void delete(File directory)
+  {
+    File[] files;
+    Stack<File> stack = new Stack<>();
+    stack.push(directory);
+    while (!stack.isEmpty()) {
+      if (stack.lastElement().isFile()) {
+        stack.pop().delete();
+      }
+      else {
+        files = stack.lastElement().listFiles();
+
+        if (files.length == 0)
+          stack.pop().delete();
+        else
+          for (File file : files) {
+            stack.push(file);
+          }
+      }
+    }
   }
 }
