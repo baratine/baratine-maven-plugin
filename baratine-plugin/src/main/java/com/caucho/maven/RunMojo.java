@@ -103,33 +103,30 @@ public class RunMojo extends BaratineExecutableMojo
       Thread.sleep(2 * 1000);
 
       if (script != null) {
-        byte[] buffer = script.getBytes(StandardCharsets.UTF_8);
+        byte[] buf = script.getBytes(StandardCharsets.UTF_8);
 
         int i = 0;
 
-        for (; i < buffer.length && buffer[i] == ' '; i++) ;
+        for (; i < buf.length && buf[i] == ' '; i++) ;
 
         int start = i;
 
         getLog().info("running Baratine Script");
 
-        for (; i < buffer.length; i++) {
-          if (buffer[i] == '\n' || i == buffer.length - 1) {
+        for (; i < buf.length; i++) {
+          if (buf[i] == '\n' || i == buf.length - 1) {
             int len = i - start;
-            if (i == buffer.length - 1)
+            if (i == buf.length - 1)
               len += 1;
 
-            String scriptCmd = new String(buffer, start, len);
+            String scriptCmd = new String(buf, start, len);
             getLog().info("baratine>" + scriptCmd);
 
             out.write((scriptCmd + '\n').getBytes());
             out.flush();
             Thread.sleep(400);
 
-            for (;
-                 i < buffer.length && (buffer[i] == ' ' || buffer[i] == '\n');
-                 i++)
-              ;
+            for (; i < buf.length && (buf[i] == ' ' || buf[i] == '\n'); i++) ;
 
             start = i;
           }
