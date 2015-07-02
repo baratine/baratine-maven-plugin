@@ -9,10 +9,16 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +43,124 @@ public class RunMojo extends BaratineExecutableMojo
   @Parameter(property = "baratine.run.verbose")
   private boolean verbose = false;
 
+  @Parameter(property = "baratine.run.external")
+  private boolean external = false;
+
+  @Override
   public void execute() throws MojoExecutionException, MojoFailureException
   {
     if (runSkip)
       return;
 
+    if (external) {
+      executeExternal();
+    }
+    else {
+      executeExternal();
+    }
+  }
+
+  private void executeInternal()
+    throws MojoFailureException, MojoExecutionException, IOException,
+    ScriptException
+  {
+    ScriptEngine script = getScriptEngine();
+
+    if (script != null)
+      executeInternal(script);
+    else {
+      getLog().warn(
+        "can't obtain Baratine ScriptEngine falling back to executing Baratine in a separate process");
+      executeExternal();
+    }
+  }
+
+  private ScriptEngine getScriptEngine()
+  {
+    String baratine = getBaratine();
+    String baratineApi = getBaratineApi();
+
+    List<URL> urls = new ArrayList<>();
+
+    ScriptEngine script = null;
+    try {
+      addUrl(urls, baratine);
+      addUrl(urls, baratineApi);
+
+      URLClassLoader cl
+        = new URLClassLoader(urls.toArray(new URL[urls.size()]));
+
+      script = new ScriptEngineManager(cl).getEngineByName("baratine");
+    } catch (Exception e) {
+      getLog().debug(e.getMessage(), e);
+    }
+
+    return script;
+  }
+
+  private void addUrl(List<URL> urls, String file) throws MalformedURLException
+  {
+    urls.add(new File(file).toURL());
+  }
+
+  private void executeInternal(ScriptEngine script)
+    throws IOException, ScriptException, MojoExecutionException
+  {
+    cleanWorkDir();
+
+    Object obj = script.eval(getStartCmd());
+    System.out.println(obj);
+    Set artifacts = project.getDependencyArtifacts();
+
+    for (Object a : artifacts) {
+      Artifact artifact = (Artifact) a;
+      if (!"bar".equals(artifact.getType()))
+        continue;
+
+      String file = getDeployableBar(artifact);
+
+      obj = script.eval(getDeployCmd(file));
+      System.out.print(obj);
+    }
+
+    obj = script.eval(getDeployCmd(getBarLocation()));
+    System.out.println(obj);
+
+    if (this.script != null) {
+      byte[] buf = this.script.getBytes(StandardCharsets.UTF_8);
+
+      int i = 0;
+
+      for (; i < buf.length && buf[i] == ' '; i++) ;
+
+      int start = i;
+
+      getLog().info("running Baratine Script");
+
+      for (; i < buf.length; i++) {
+        if (buf[i] == '\n' || i == buf.length - 1) {
+          int len = i - start;
+          if (i == buf.length - 1)
+            len += 1;
+
+          String scriptCmd = new String(buf, start, len);
+          getLog().info("baratine>" + scriptCmd);
+
+          obj = script.eval((scriptCmd));
+          System.out.println(obj);
+
+          for (; i < buf.length && (buf[i] == ' ' || buf[i] == '\n'); i++) ;
+
+          start = i;
+        }
+      }
+    }
+
+  }
+
+  public void executeExternal()
+    throws MojoExecutionException, MojoFailureException
+  {
     String cp = getBaratine();
     cp = cp + File.pathSeparatorChar;
     cp = cp + getBaratineApi();
@@ -71,12 +190,7 @@ public class RunMojo extends BaratineExecutableMojo
       x.submit(new StreamPiper(err, System.err));
       x.submit(new StreamPiper(System.in, out));
 
-      String cmd = String.format("start -bg --root-dir %1$s -p %2$d %3$s\n",
-                                 this.workDir,
-                                 this.port,
-                                 (verbose ? "-vv" : ""));
-
-      out.write(cmd.getBytes());
+      out.write(getStartCmd().getBytes());
       out.flush();
       Thread.sleep(2 * 1000);
 
@@ -89,16 +203,12 @@ public class RunMojo extends BaratineExecutableMojo
 
         String file = getDeployableBar(artifact);
 
-        cmd = String.format("deploy %1$s\n", file);
-
-        out.write(cmd.getBytes());
+        out.write(getDeployCmd(file).getBytes());
         out.flush();
         Thread.sleep(2 * 1000);
       }
 
-      cmd = String.format("deploy %1$s\n", getBarLocation());
-
-      out.write(cmd.getBytes());
+      out.write(getDeployCmd(getBarLocation()).getBytes());
       out.flush();
       Thread.sleep(2 * 1000);
 
@@ -156,6 +266,21 @@ public class RunMojo extends BaratineExecutableMojo
           process.destroyForcibly();
       }
     }
+  }
+
+  private String getStartCmd()
+  {
+    String cmd = String.format("start -bg --root-dir %1$s -p %2$d %3$s\n",
+                               this.workDir,
+                               this.port,
+                               (verbose ? "-vv" : ""));
+
+    return cmd;
+  }
+
+  private String getDeployCmd(String file)
+  {
+    return String.format("deploy %1$s\n", file);
   }
 
   static class StreamPiper implements Runnable
