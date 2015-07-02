@@ -56,13 +56,17 @@ public class RunMojo extends BaratineExecutableMojo
       executeExternal();
     }
     else {
-      executeExternal();
+      try {
+        executeInternal();
+      } catch (Exception e) {
+        throw new MojoExecutionException(e.getMessage(), e);
+      }
     }
   }
 
   private void executeInternal()
     throws MojoFailureException, MojoExecutionException, IOException,
-    ScriptException
+    ScriptException, InterruptedException
   {
     ScriptEngine script = getScriptEngine();
 
@@ -104,7 +108,8 @@ public class RunMojo extends BaratineExecutableMojo
   }
 
   private void executeInternal(ScriptEngine script)
-    throws IOException, ScriptException, MojoExecutionException
+    throws IOException, ScriptException, MojoExecutionException,
+    InterruptedException
   {
     cleanWorkDir();
 
@@ -126,6 +131,8 @@ public class RunMojo extends BaratineExecutableMojo
     obj = script.eval(getDeployCmd(getBarLocation()));
     System.out.println(obj);
 
+    Thread.sleep(1000);
+
     if (this.script != null) {
       byte[] buf = this.script.getBytes(StandardCharsets.UTF_8);
 
@@ -144,7 +151,7 @@ public class RunMojo extends BaratineExecutableMojo
             len += 1;
 
           String scriptCmd = new String(buf, start, len);
-          getLog().info("baratine>" + scriptCmd);
+          System.out.println("baratine>" + scriptCmd);
 
           obj = script.eval((scriptCmd));
           System.out.println(obj);
@@ -156,6 +163,9 @@ public class RunMojo extends BaratineExecutableMojo
       }
     }
 
+    System.out.println("baratine>status");
+    obj = script.eval("status");
+    System.out.println(obj);
   }
 
   public void executeExternal()
@@ -230,7 +240,7 @@ public class RunMojo extends BaratineExecutableMojo
               len += 1;
 
             String scriptCmd = new String(buf, start, len);
-            getLog().info("baratine>" + scriptCmd);
+            System.out.println("baratine>" + scriptCmd);
 
             out.write((scriptCmd + '\n').getBytes());
             out.flush();
