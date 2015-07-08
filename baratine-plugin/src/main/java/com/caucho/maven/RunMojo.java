@@ -126,12 +126,14 @@ public class RunMojo extends BaratineExecutableMojo
 
       obj = script.eval(getDeployCmd(file));
       System.out.print(obj);
+
+      Thread.sleep(this.deployInterval * 1000);
     }
 
     obj = script.eval(getDeployCmd(getBarLocation()));
     System.out.println(obj);
 
-    Thread.sleep(1000);
+    Thread.sleep(this.deployInterval * 1000);
 
     if (this.script != null) {
       byte[] buf = this.script.getBytes(StandardCharsets.UTF_8);
@@ -215,12 +217,14 @@ public class RunMojo extends BaratineExecutableMojo
 
         out.write(getDeployCmd(file).getBytes());
         out.flush();
-        Thread.sleep(2 * 1000);
+
+        Thread.sleep(this.deployInterval * 1000);
       }
 
       out.write(getDeployCmd(getBarLocation()).getBytes());
       out.flush();
-      Thread.sleep(2 * 1000);
+
+      Thread.sleep(deployInterval * 1000);
 
       if (script != null) {
         byte[] buf = script.getBytes(StandardCharsets.UTF_8);
@@ -280,10 +284,19 @@ public class RunMojo extends BaratineExecutableMojo
 
   private String getStartCmd()
   {
-    String cmd = String.format("start -bg --root-dir %1$s -p %2$d %3$s\n",
-                               this.workDir,
-                               this.port,
-                               (verbose ? "-vv" : ""));
+    String cmd = "start -bg";
+
+    if (this.conf != null)
+      cmd += " --conf " + this.conf.getAbsolutePath();
+
+    cmd += " --root-dir " + this.workDir;
+
+    cmd += " -p " + this.port;
+
+    if (this.verbose)
+      cmd += " -vv";
+
+    cmd += "\n";
 
     return cmd;
   }

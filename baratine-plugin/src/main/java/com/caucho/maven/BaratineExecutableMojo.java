@@ -42,6 +42,12 @@ public abstract class BaratineExecutableMojo extends AbstractMojo
     property = "baratine.workDir")
   protected String workDir;
 
+  @Parameter(property = "baratine.conf")
+  protected File conf;
+
+  @Parameter(property = "baratine.deploy.interval")
+  protected int deployInterval = 5;
+
   protected FileSystem _fileSystem = FileSystems.getDefault();
 
   protected String getBarLocation() throws MojoExecutionException
