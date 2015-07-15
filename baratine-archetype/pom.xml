@@ -43,20 +43,6 @@
           </execution>
         </executions>
       </plugin>
-
-      <plugin>
-        <groupId>io.baratine</groupId>
-        <artifactId>baratine-plugin</artifactId>
-        <version>1.0-SNAPSHOT</version>
-        <extensions>true</extensions>
-
-        <configuration>
-          <port>8086</port>
-          <workDir>/tmp/baratine-T0002</workDir>
-          <script>
-          </script>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
 
