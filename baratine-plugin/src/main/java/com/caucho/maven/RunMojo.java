@@ -38,7 +38,7 @@ public class RunMojo extends BaratineExecutableMojo
   private String script;
 
   @Parameter(property = "baratine.run.skip")
-  private boolean runSkip = false;
+  private boolean skip = false;
 
   @Parameter(property = "baratine.run.verbose")
   private boolean verbose = false;
@@ -49,7 +49,7 @@ public class RunMojo extends BaratineExecutableMojo
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException
   {
-    if (runSkip)
+    if (skip)
       return;
 
     if (external) {
