@@ -27,8 +27,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-@Mojo(name = "run", defaultPhase = LifecyclePhase.NONE, requiresProject = true,
-  threadSafe = true, requiresDependencyResolution = ResolutionScope.RUNTIME)
+@Mojo(name = "run", defaultPhase = LifecyclePhase.PACKAGE, requiresProject = true,
+      threadSafe = true, requiresDependencyResolution = ResolutionScope.RUNTIME)
 public class RunMojo extends BaratineExecutableMojo
 {
   @Parameter(defaultValue = "${session}", readonly = true, required = true)
@@ -173,6 +173,8 @@ public class RunMojo extends BaratineExecutableMojo
   public void executeExternal()
     throws MojoExecutionException, MojoFailureException
   {
+    String bar = getBarLocation();
+
     String cp = getBaratine();
     cp = cp + File.pathSeparatorChar;
     cp = cp + getBaratineApi();
@@ -188,6 +190,8 @@ public class RunMojo extends BaratineExecutableMojo
     ExecutorService x = Executors.newFixedThreadPool(3);
     Process process = null;
 
+    OutputStream out = null;
+
     try {
       cleanWorkDir();
 
@@ -196,7 +200,7 @@ public class RunMojo extends BaratineExecutableMojo
 
       InputStream in = process.getInputStream();
       InputStream err = process.getErrorStream();
-      OutputStream out = process.getOutputStream();
+      out = process.getOutputStream();
 
       x.submit(new StreamPiper(in, System.out));
       x.submit(new StreamPiper(err, System.err));
@@ -221,7 +225,7 @@ public class RunMojo extends BaratineExecutableMojo
         Thread.sleep(this.deployInterval * 1000);
       }
 
-      out.write(getDeployCmd(getBarLocation()).getBytes());
+      out.write(getDeployCmd(bar).getBytes());
       out.flush();
 
       Thread.sleep(deployInterval * 1000);
@@ -261,6 +265,13 @@ public class RunMojo extends BaratineExecutableMojo
     } catch (Exception e) {
       String message = String.format("exception running baratine %1$s",
                                      e.getMessage());
+      if (out != null)
+        try {
+
+          out.write("stop\nexit\n".getBytes());
+        } catch (Throwable t) {
+          getLog().debug(t);
+        }
       throw new MojoExecutionException(message, e);
     } finally {
       try {
