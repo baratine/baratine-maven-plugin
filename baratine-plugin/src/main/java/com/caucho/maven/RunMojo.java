@@ -361,35 +361,6 @@ public class RunMojo extends BaratineExecutableMojo
   {
     return String.format("deploy %1$s\n", file);
   }
-
-  static class StreamPiper implements Runnable
-  {
-    InputStream _in;
-    OutputStream _out;
-
-    public StreamPiper(InputStream in, OutputStream out)
-    {
-      _in = in;
-      _out = out;
-    }
-
-    @Override
-    public void run()
-    {
-      byte[] buffer = new byte[256];
-
-      int i;
-
-      try {
-        while ((i = _in.read(buffer)) > 0) {
-          _out.write(buffer, 0, i);
-          _out.flush();
-        }
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-  }
 }
 
 class ScriptEngineHandle

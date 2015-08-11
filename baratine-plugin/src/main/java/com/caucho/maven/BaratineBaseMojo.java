@@ -2,34 +2,40 @@ package com.caucho.maven;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
+import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class BaratineExecutableMojo extends BaratineBaseMojo
+public abstract class BaratineBaseMojo extends AbstractMojo
 {
-  @Parameter(defaultValue = "8085", property = "baratine.port")
-  protected int port;
+  protected static final String baratineGroupId = "io.baratine";
+  protected static final String baratineId = "baratine";
+  protected static final String baratineApiId = "baratine-api";
 
-  @Parameter(defaultValue = "${java.io.tmpdir}/baratine",
-             property = "baratine.workDir")
-  protected String workDir;
+  @Parameter(defaultValue = "${project}", readonly = true, required = true)
+  protected MavenProject project;
 
-  @Parameter(property = "baratine.conf")
-  protected File conf;
+  @Parameter(defaultValue = "${project.build.directory}", required = true)
+  protected File outputDirectory;
 
-  @Parameter(property = "baratine.deploy.interval")
-  protected int deployInterval = 5;
+  @Parameter(alias = "barName", property = "bar.finalName",
+             defaultValue = "${project.build.finalName}")
+  protected String barName;
 
   protected FileSystem _fileSystem = FileSystems.getDefault();
 
@@ -123,18 +129,54 @@ public abstract class BaratineExecutableMojo extends BaratineBaseMojo
     return null;
   }
 
-  public void cleanWorkDir() throws IOException
+  protected void delete(File directory)
   {
-    File workDir = new File(this.workDir);
+    File[] files;
+    Stack<File> stack = new Stack<>();
+    stack.push(directory);
+    while (!stack.isEmpty()) {
+      if (stack.lastElement().isFile()) {
+        stack.pop().delete();
+      }
+      else {
+        files = stack.lastElement().listFiles();
 
-    File dir = new File(workDir, "data-" + port);
+        if (files.length == 0)
+          stack.pop().delete();
+        else
+          for (File file : files) {
+            stack.push(file);
+          }
+      }
+    }
+  }
 
-    if (dir.exists())
-      delete(dir);
+  static class StreamPiper implements Runnable
+  {
+    private InputStream _in;
+    private OutputStream _out;
 
-    dir = new File(workDir, "log");
+    public StreamPiper(InputStream in, OutputStream out)
+    {
+      _in = in;
+      _out = out;
+    }
 
-    if (dir.exists())
-      delete(dir);
+    @Override
+    public void run()
+    {
+      byte[] buffer = new byte[256];
+
+      int i;
+
+      try {
+        while ((i = _in.read(buffer)) > 0) {
+          _out.write(buffer, 0, i);
+          _out.flush();
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
   }
 }
