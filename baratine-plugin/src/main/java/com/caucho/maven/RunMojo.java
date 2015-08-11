@@ -12,6 +12,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +28,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-@Mojo(name = "run", defaultPhase = LifecyclePhase.PACKAGE, requiresProject = true,
+@Mojo(name = "run", defaultPhase = LifecyclePhase.PACKAGE,
+      requiresProject = true,
       threadSafe = true, requiresDependencyResolution = ResolutionScope.RUNTIME)
 public class RunMojo extends BaratineExecutableMojo
 {
@@ -68,10 +70,10 @@ public class RunMojo extends BaratineExecutableMojo
     throws MojoFailureException, MojoExecutionException, IOException,
     ScriptException, InterruptedException
   {
-    ScriptEngine script = getScriptEngine();
+    ScriptEngineHandle handle = getScriptEngine();
 
-    if (script != null)
-      executeInternal(script);
+    if (handle != null)
+      executeInternal(handle);
     else {
       getLog().warn(
         "can't obtain Baratine ScriptEngine falling back to executing Baratine in a separate process");
@@ -79,14 +81,17 @@ public class RunMojo extends BaratineExecutableMojo
     }
   }
 
-  private ScriptEngine getScriptEngine()
+  private ScriptEngineHandle getScriptEngine()
   {
     String baratine = getBaratine();
     String baratineApi = getBaratineApi();
 
+    getLog().info("using baratine.jar: " + baratine);
+    getLog().info("using baratine-api.jar: " + baratineApi);
+
     List<URL> urls = new ArrayList<>();
 
-    ScriptEngine script = null;
+    ScriptEngineHandle handle = null;
     try {
       addUrl(urls, baratine);
       addUrl(urls, baratineApi);
@@ -94,20 +99,40 @@ public class RunMojo extends BaratineExecutableMojo
       URLClassLoader cl
         = new URLClassLoader(urls.toArray(new URL[urls.size()]));
 
-      script = new ScriptEngineManager(cl).getEngineByName("baratine");
+      ScriptEngine script
+        = new ScriptEngineManager(cl).getEngineByName("baratine");
+
+      handle = new ScriptEngineHandle(script, cl);
     } catch (Exception e) {
       getLog().debug(e.getMessage(), e);
     }
 
-    return script;
+    return handle;
   }
 
+  @SuppressWarnings("deprecation")
   private void addUrl(List<URL> urls, String file) throws MalformedURLException
   {
     urls.add(new File(file).toURL());
   }
 
-  private void executeInternal(ScriptEngine script)
+  private void executeInternal(ScriptEngineHandle handle)
+    throws InterruptedException, ScriptException, MojoExecutionException,
+    IOException
+  {
+    Thread currentThread = Thread.currentThread();
+
+    ClassLoader oldClassloader = currentThread.getContextClassLoader();
+
+    try {
+      currentThread.setContextClassLoader(handle.getClassLoader());
+      executeInternalImpl(handle.getScriptEngine());
+    } finally {
+      currentThread.setContextClassLoader(oldClassloader);
+    }
+  }
+
+  private void executeInternalImpl(ScriptEngine script)
     throws IOException, ScriptException, MojoExecutionException,
     InterruptedException
   {
@@ -135,6 +160,8 @@ public class RunMojo extends BaratineExecutableMojo
 
     Thread.sleep(this.deployInterval * 1000);
 
+    boolean isScriptExit = false;
+
     if (this.script != null) {
       byte[] buf = this.script.getBytes(StandardCharsets.UTF_8);
 
@@ -153,10 +180,15 @@ public class RunMojo extends BaratineExecutableMojo
             len += 1;
 
           String scriptCmd = new String(buf, start, len);
-          System.out.println("baratine>" + scriptCmd);
+          System.out.println("baratine> " + scriptCmd);
 
           obj = script.eval((scriptCmd));
           System.out.println(obj);
+
+          isScriptExit = "exit".equals(scriptCmd);
+
+          if (isScriptExit)
+            break;
 
           for (; i < buf.length && (buf[i] == ' ' || buf[i] == '\n'); i++) ;
 
@@ -165,9 +197,22 @@ public class RunMojo extends BaratineExecutableMojo
       }
     }
 
-    System.out.println("baratine>status");
-    obj = script.eval("status");
-    System.out.println(obj);
+    if (!isScriptExit) {
+      Console console = System.console();
+
+      String command;
+      while ((command = console.readLine("baratine> ")) != null) {
+        try {
+          obj = script.eval(command);
+          System.out.println(obj);
+
+          if ("exit".equals(command))
+            break;
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+    }
   }
 
   public void executeExternal()
@@ -347,3 +392,26 @@ public class RunMojo extends BaratineExecutableMojo
   }
 }
 
+class ScriptEngineHandle
+{
+  private ScriptEngine _scriptEngine;
+
+  private ClassLoader _classLoader;
+
+  public ScriptEngineHandle(ScriptEngine scriptEngine,
+                            ClassLoader classLoader)
+  {
+    _scriptEngine = scriptEngine;
+    _classLoader = classLoader;
+  }
+
+  public ScriptEngine getScriptEngine()
+  {
+    return _scriptEngine;
+  }
+
+  public ClassLoader getClassLoader()
+  {
+    return _classLoader;
+  }
+}
