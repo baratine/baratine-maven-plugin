@@ -4,4 +4,4 @@
 
 cd baratine-plugin/src/it/T0003
 
-mvn -e -X -P clean package
+mvn -e -X clean package
