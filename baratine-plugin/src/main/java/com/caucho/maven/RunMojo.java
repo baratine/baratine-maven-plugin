@@ -94,7 +94,8 @@ public class RunMojo extends BaratineExecutableMojo
     ScriptEngineHandle handle = null;
     try {
       addUrl(urls, baratine);
-      addUrl(urls, baratineApi);
+      if (baratineApi != null)
+        addUrl(urls, baratineApi);
 
       URLClassLoader cl
         = new URLClassLoader(urls.toArray(new URL[urls.size()]));
