@@ -6,25 +6,19 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.baratine</groupId>
-  <artifactId>maven-collection-baratine</artifactId>
+  <artifactId>baratine-maven-plugin-builder</artifactId>
   <packaging>pom</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <url>https://github.com/baratine/maven-collection-baratine</url>
-
-  <distributionManagement>
-    <repository>
-      <id>tmp</id>
-      <url>file:///tmp/.m2</url>
-    </repository>
-  </distributionManagement>
+  <version>0.10-SNAPSHOT</version>
+  <name>Baratine Maven Plugin Builder</name>
+  <url>https://github.com/baratine/baratine-maven-plugin</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <modules>
-    <module>baratine-archetype</module>
-    <module>baratine-plugin</module>
+    <module>baratine-maven-plugin</module>
+    <module>baratine-maven-archetype</module>
   </modules>
 
 </project>
