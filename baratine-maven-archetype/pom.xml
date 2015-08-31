@@ -4,17 +4,28 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>io.baratine</groupId>
-    <artifactId>baratine-maven-plugin-builder</artifactId>
-    <version>0.10.1</version>
-  </parent>
-
+  <groupId>io.baratine</groupId>
   <artifactId>baratine-maven-archetype</artifactId>
   <name>Baratine Maven Archetype</name>
+  <version>0.10.1</version>
+
   <url>
     https://github.com/baratine/baratine-maven-plugin/tree/master/baratine-maven-archetype
   </url>
+
+  <description>Baratine Maven Archetype</description>
+  <licenses>
+    <license>
+      <name>GPLv3</name>
+      <url>http://www.gnu.org/licenses/gpl-3.0.en.html</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <url>https://github.com/carojkov</url>
+    </developer>
+  </developers>
 
   <distributionManagement>
     <snapshotRepository>
