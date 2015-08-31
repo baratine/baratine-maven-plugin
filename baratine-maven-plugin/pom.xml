@@ -12,6 +12,10 @@
 
   <description>Baratine Maven Plugin</description>
 
+  <scm>
+    <url>git@github.com:baratine/baratine-maven-plugin.git</url>
+  </scm>
+
   <licenses>
     <license>
       <name>GPLv3</name>

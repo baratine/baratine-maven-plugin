@@ -6,14 +6,20 @@
 
   <groupId>io.baratine</groupId>
   <artifactId>baratine-maven-archetype</artifactId>
-  <name>Baratine Maven Archetype</name>
   <version>0.10.1</version>
+
+  <name>Baratine Maven Archetype</name>
+  <description>Baratine Maven Archetype</description>
+
+  <scm>
+    <url>git@github.com:baratine/baratine-maven-plugin.git</url>
+  </scm>
 
   <url>
     https://github.com/baratine/baratine-maven-plugin/tree/master/baratine-maven-archetype
   </url>
 
-  <description>Baratine Maven Archetype</description>
+
   <licenses>
     <license>
       <name>GPLv3</name>
