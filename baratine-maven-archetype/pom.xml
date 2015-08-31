@@ -7,11 +7,10 @@
   <parent>
     <groupId>io.baratine</groupId>
     <artifactId>baratine-maven-plugin-builder</artifactId>
-    <version>0.10-SNAPSHOT</version>
+    <version>0.10.0</version>
   </parent>
 
   <artifactId>baratine-maven-archetype</artifactId>
-  <version>0.10-SNAPSHOT</version>
   <name>Baratine Maven Archetype</name>
   <url>
     https://github.com/baratine/baratine-maven-plugin/tree/master/baratine-maven-archetype
