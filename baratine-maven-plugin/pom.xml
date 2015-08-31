@@ -7,14 +7,17 @@
   <parent>
     <groupId>io.baratine</groupId>
     <artifactId>baratine-maven-plugin-builder</artifactId>
-    <version>0.10.0</version>
+    <version>0.10.1</version>
   </parent>
 
   <artifactId>baratine-maven-plugin</artifactId>
+
   <name>Baratine Maven Plugin</name>
+
   <url>
     https://github.com/baratine/baratine-maven-plugin/tree/master/baratine-maven-plugin
   </url>
+
   <packaging>maven-plugin</packaging>
 
   <distributionManagement>
