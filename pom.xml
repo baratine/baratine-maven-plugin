@@ -8,7 +8,7 @@
   <groupId>io.baratine</groupId>
   <artifactId>baratine-maven-plugin-builder</artifactId>
   <packaging>pom</packaging>
-  <version>0.10.0</version>
+  <version>0.10.1</version>
   <name>Baratine Maven Plugin Builder</name>
   <url>https://github.com/baratine/baratine-maven-plugin</url>
 
