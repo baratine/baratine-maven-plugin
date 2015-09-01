@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * A base class for Baratine deploy and run mojos.
+ */
 public abstract class BaratineExecutableMojo extends BaratineBaseMojo
 {
   @Parameter(defaultValue = "8085", property = "baratine.port")

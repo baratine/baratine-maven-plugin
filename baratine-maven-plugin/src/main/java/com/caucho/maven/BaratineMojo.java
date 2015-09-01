@@ -22,6 +22,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Mojo 'baratine' provides support for packaging and builds a .bar and an
+ * executable .jar file.
+ * <p>
+ * The .jar file packages in Baratine and can be executed using a standard
+ * <code>java -jar</code>command.
+ * <p>
+ * A .bar file structure is described in full at http://baratine.io.
+ */
 @Mojo(name = "baratine", defaultPhase = LifecyclePhase.PACKAGE,
       requiresProject = true, threadSafe = true,
       requiresDependencyResolution = ResolutionScope.RUNTIME)
@@ -40,9 +49,6 @@ public class BaratineMojo extends BaratineBaseMojo
   @Parameter
   private String[] excludes;
 
-  @Parameter
-  private boolean includeBaratine = false;
-
   @Component(role = Archiver.class, hint = "jar")
   private JarArchiver archiver;
 
@@ -55,9 +61,17 @@ public class BaratineMojo extends BaratineBaseMojo
   @Parameter(defaultValue = "${project.build.outputDirectory}", required = true)
   private File classesDirectory;
 
+  /**
+   * Provides a name for executable jar file.
+   *
+   * Defaults to concatenation of "executable-" and resulting artifact name.
+   */
   @Parameter(required = false)
   private String executableName;
 
+  /**
+   * Requests building the executable jar file.
+   */
   @Parameter(defaultValue = "true", required = false)
   private boolean buildExecutable;
 
@@ -68,7 +82,10 @@ public class BaratineMojo extends BaratineBaseMojo
 
   protected File getExecutableBarFile()
   {
-    return new File(outputDirectory, "executable-" + barName + ".jar");
+    if (executableName != null)
+      return new File(outputDirectory, executableName);
+    else
+     return new File(outputDirectory, "executable-" + barName + ".jar");
   }
 
   protected File getClassesDirectory()
@@ -111,7 +128,7 @@ public class BaratineMojo extends BaratineBaseMojo
         if (!"jar".equals(a.getType()))
           continue;
 
-        if (!includeBaratine && "io.baratine".equals(a.getGroupId())) {
+        if ("io.baratine".equals(a.getGroupId())) {
           getLog().info("skipping artifact "
                         + a.getId()
                         + ':'

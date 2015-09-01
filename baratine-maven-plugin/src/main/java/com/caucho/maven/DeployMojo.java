@@ -1,6 +1,5 @@
 package com.caucho.maven;
 
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -12,9 +11,18 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Mojo deploy deploys .bar file to a remote Baratine server.
+ *
+ * The mojo will look for the .bar artifact of the project to deploy.
+ *
+ * Mojo should typically be invoked using mvn command with the sequence of goals
+ * below.
+ *
+ * <code>mvn clean package baratine:deploy</code>
+ */
 @Mojo(name = "deploy", defaultPhase = LifecyclePhase.NONE,
       requiresProject = true, threadSafe = true,
       requiresDependencyResolution = ResolutionScope.RUNTIME)
@@ -23,15 +31,27 @@ public class DeployMojo extends BaratineExecutableMojo
   @Parameter(defaultValue = "${session}", readonly = true, required = true)
   private MavenSession session;
 
-  @Parameter(defaultValue = "8085", property = "baratine.port")
-  private int port;
-
+  /**
+   * IP or DNS name of a machine running Baratine server. Defaults to 'localhost'
+   */
   @Parameter(defaultValue = "localhost", property = "baratine.host")
   private String host;
 
+  /**
+   * Port on which Baratine server is listening. Defaults to 8085.
+   */
+  @Parameter(defaultValue = "8085", property = "baratine.port")
+  private int port;
+
+  /**
+   * A user to be used for authentication
+   */
   @Parameter(property = "baratine.user")
   private String user;
 
+  /**
+   * A password to be used for authentication
+   */
   @Parameter(property = "baratine.password")
   private String password;
 

@@ -28,6 +28,29 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Mojo run executes Baratine .bar file. Typically, the plugin is
+ * invoked using the following sequence of goals.
+ * <p>
+ * <code>mvn clean package baratine:run</code>
+ * <p>
+ * The plugin can run Baratine in an embedded mode or external mode. In embedded
+ * mode Baratine is executed within the JVM executing the pom.xml.
+ * <p>
+ * External mode executes Baratine in a separate JVM.
+ * <p>
+ * In both cases Baratine is run in an interactive mode and is capable of accepting
+ * and executing standard Baratine commands, e.g. jamp-query, deploy, etc.
+ * <p>
+ * If a script is supplied in configuration Baratine will execute it.
+ * <p>
+ * A script can automatically close Baratine and proceed with maven goals by
+ * executing command 'exit'
+ * <p>
+ * If your pom.xml doesn't specify script or in the case when the script doesn't
+ * finish with exit command a manually entered <code>exit</code> command will
+ * stop Baratine and allow maven to proceed to executing the next goal.
+ */
 @Mojo(name = "run", defaultPhase = LifecyclePhase.PACKAGE,
       requiresProject = true,
       threadSafe = true, requiresDependencyResolution = ResolutionScope.RUNTIME)
@@ -36,15 +59,35 @@ public class RunMojo extends BaratineExecutableMojo
   @Parameter(defaultValue = "${session}", readonly = true, required = true)
   private MavenSession session;
 
+  /**
+   * Script to execute.
+   * e.g.
+   * <code>
+   * <p>
+   * sleep 1
+   * jamp-query /test-service method parameter
+   * exit
+   * <p>
+   * </code>
+   */
   @Parameter
   private String script;
 
+  /**
+   * When set to true allows skipping of the baratine:run
+   */
   @Parameter(property = "baratine.run.skip")
   private boolean skip = false;
 
+  /**
+   * Instructs Baratine to execute in verbose mode.
+   */
   @Parameter(property = "baratine.run.verbose")
   private boolean verbose = false;
 
+  /**
+   * Instructs Baratine to execute in a spawned JVM.
+   */
   @Parameter(property = "baratine.run.external")
   private boolean external = false;
 

@@ -21,6 +21,9 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * A base class for Baratine mojos.
+ */
 public abstract class BaratineBaseMojo extends AbstractMojo
 {
   protected static final String baratineGroupId = "io.baratine";
@@ -33,6 +36,9 @@ public abstract class BaratineBaseMojo extends AbstractMojo
   @Parameter(defaultValue = "${project.build.directory}", required = true)
   protected File outputDirectory;
 
+  /**
+   * Provides name for resulting artifact (without the .bar extension)
+   */
   @Parameter(alias = "barName", property = "bar.finalName",
              defaultValue = "${project.build.finalName}")
   protected String barName;
