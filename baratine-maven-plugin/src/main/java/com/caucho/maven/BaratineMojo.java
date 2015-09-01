@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Mojo 'baratine' provides support for packaging and builds a .bar and an
+ * Mojo 'baratine' provides support for packaging and building of a .bar and an
  * executable .jar file.
  * <p>
  * The .jar file packages in Baratine and can be executed using a standard

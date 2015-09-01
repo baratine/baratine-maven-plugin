@@ -1,0 +1,41 @@
+ ------
+ Introduction
+ ------
+ Author
+ ------
+ YYYY-MM-DD
+ ------
+
+
+Baratine Maven Plugin
+
+  The plugin complements Baratine™ Platform by providing the following functionality:
+
+   * provide support for Baratine packaging. (.bar files)
+
+   * build java executable package that embed a Baratine service (.jar files)
+
+   * run Baratine packages as part of the maven script
+
+   * deploy Baratine packages to a remote server
+
+
+* Goals Overview
+
+  General information about the goals.
+
+  * {{{./run-mojo.html}baratine:run}} runs Baratine package in maven
+
+  * {{{./deploy-mojo.html}baratine:run}} deploy to a remote server
+
+* Usage
+
+  If you feel like the plugin is missing a feature or has a defect, you can fill a feature request or bug report in our
+  {{{https://github.com/baratine/baratine-maven-plugin/issues}issue tracker}}
+
+  When creating a new issue, please provide a comprehensive description of your
+  concern. Especially for fixing bugs it is crucial that the developers can reproduce your problem. For this reason,
+  entire debug logs, POMs or most preferably little demo projects attached to the issue are very much appreciated.
+  Of course, patches are welcome, too. Contributors can check out the project from our
+  {{{https://github.com/baratine/baratine-maven-plugin}source repository}} and will find supplementary information in the
+  {{{http://maven.apache.org/guides/development/guide-helping.html}guide to helping with Maven}}.

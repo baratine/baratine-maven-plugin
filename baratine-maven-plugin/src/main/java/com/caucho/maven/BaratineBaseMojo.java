@@ -26,9 +26,9 @@ import java.util.regex.Pattern;
  */
 public abstract class BaratineBaseMojo extends AbstractMojo
 {
-  protected static final String baratineGroupId = "io.baratine";
-  protected static final String baratineId = "baratine";
-  protected static final String baratineApiId = "baratine-api";
+  public static final String baratineGroupId = "io.baratine";
+  public static final String baratineId = "baratine";
+  public static final String baratineApiId = "baratine-api";
 
   @Parameter(defaultValue = "${project}", readonly = true, required = true)
   protected MavenProject project;
@@ -43,17 +43,17 @@ public abstract class BaratineBaseMojo extends AbstractMojo
              defaultValue = "${project.build.finalName}")
   protected String barName;
 
-  protected FileSystem _fileSystem = FileSystems.getDefault();
+  private FileSystem fileSystem = FileSystems.getDefault();
 
   protected String getBarLocation() throws MojoExecutionException
   {
     String id = project.getArtifactId();
 
     Path source
-      = _fileSystem.getPath(outputDirectory.getAbsolutePath(),
+      = fileSystem.getPath(outputDirectory.getAbsolutePath(),
                             barName + ".bar");
     Path to
-      = _fileSystem.getPath(outputDirectory.getAbsolutePath(),
+      = fileSystem.getPath(outputDirectory.getAbsolutePath(),
                             id + ".bar");
     try {
       Files.copy(source, to, StandardCopyOption.REPLACE_EXISTING);
@@ -80,8 +80,8 @@ public abstract class BaratineBaseMojo extends AbstractMojo
 
     String target = m.replaceAll(".");
 
-    Path from = _fileSystem.getPath(sourceFile.getAbsolutePath());
-    Path to = _fileSystem.getPath("/tmp", target);
+    Path from = fileSystem.getPath(sourceFile.getAbsolutePath());
+    Path to = fileSystem.getPath("/tmp", target);
 
     Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
 

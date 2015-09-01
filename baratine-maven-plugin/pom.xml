@@ -6,7 +6,7 @@
 
   <groupId>io.baratine</groupId>
   <artifactId>baratine-maven-plugin</artifactId>
-  <version>0.10.1</version>
+  <version>0.10.2</version>
 
   <name>Baratine Maven Plugin</name>
 
@@ -27,14 +27,20 @@
     <developer>
       <url>https://github.com/carojkov</url>
     </developer>
+    <developer>
+      <url>https://github.com/diablonhn</url>
+    </developer>
   </developers>
-
 
   <url>
     https://github.com/baratine/baratine-maven-plugin/tree/master/baratine-maven-plugin
   </url>
 
   <packaging>maven-plugin</packaging>
+
+  <properties>
+    <!--mpir.skip>false</mpir.skip-->
+  </properties>
 
   <distributionManagement>
     <snapshotRepository>
@@ -216,7 +222,27 @@
         </executions>
       </plugin>
 
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.4</version>
+        <configuration>
+          <inputEncoding>UTF-8</inputEncoding>
+          <outputEncoding>UTF-8</outputEncoding>
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-plugin-plugin</artifactId>
+        <version>3.4</version>
+      </plugin>
+    </plugins>
+  </reporting>
 
 </project>

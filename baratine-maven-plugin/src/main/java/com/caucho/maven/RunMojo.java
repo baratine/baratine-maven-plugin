@@ -29,7 +29,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Mojo run executes Baratine .bar file. Typically, the plugin is
+ * Mojo 'run' executes Baratine .bar file. Typically, the plugin is
  * invoked using the following sequence of goals.
  * <p>
  * <code>mvn clean package baratine:run</code>

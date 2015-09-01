@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Mojo deploy deploys .bar file to a remote Baratine server.
+ * Mojo 'deploy' deploys .bar file to a remote Baratine server.
  *
  * The mojo will look for the .bar artifact of the project to deploy.
  *

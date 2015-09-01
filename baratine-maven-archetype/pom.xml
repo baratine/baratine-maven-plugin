@@ -6,7 +6,7 @@
 
   <groupId>io.baratine</groupId>
   <artifactId>baratine-maven-archetype</artifactId>
-  <version>0.10.1</version>
+  <version>0.10.2</version>
 
   <name>Baratine Maven Archetype</name>
   <description>Baratine Maven Archetype</description>
