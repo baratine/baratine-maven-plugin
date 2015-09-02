@@ -26,7 +26,7 @@ Baratine Maven Plugin
 
   * {{{./run-mojo.html}baratine:run}} runs Baratine package in maven
 
-  * {{{./deploy-mojo.html}baratine:run}} deploy to a remote server
+  * {{{./deploy-mojo.html}baratine:deploy}} deploy to a remote server
 
 * Usage
 
