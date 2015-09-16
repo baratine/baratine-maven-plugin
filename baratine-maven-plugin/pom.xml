@@ -13,8 +13,13 @@
   <description>Baratine Maven Plugin</description>
 
   <scm>
-    <url>git@github.com:baratine/baratine-maven-plugin.git</url>
+    <url>https://github.com/baratine/baratine-maven-plugin</url>
+    <connection>scm:git:https://github.com/baratine/baratine-maven-plugin.git</connection>
   </scm>
+
+  <url>
+    https://github.com/baratine/baratine-maven-plugin
+  </url>
 
   <licenses>
     <license>
@@ -31,10 +36,6 @@
       <url>https://github.com/diablonhn</url>
     </developer>
   </developers>
-
-  <url>
-    https://github.com/baratine/baratine-maven-plugin/tree/master/baratine-maven-plugin
-  </url>
 
   <packaging>maven-plugin</packaging>
 
@@ -242,6 +243,13 @@
         <artifactId>maven-plugin-plugin</artifactId>
         <version>3.4</version>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9.1</version>
+      </plugin>
+
     </plugins>
   </reporting>
 

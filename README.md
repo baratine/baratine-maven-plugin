@@ -23,7 +23,7 @@ Maven plugin for generating and building Baratine projects.
 
 A Baratine project can be generated using the following Maven command:
 
-`mvn archetype:generate -DarchetypeGroupId=io.baratine -DarchetypeArtifactId=baratine-maven-archetype -DgroupId=org.acme -DartifactId=MyApp -DarchetypeVersion=0.10-SNAPSHOT -DinteractiveMode=false`
+`mvn archetype:generate -DarchetypeGroupId=io.baratine -DarchetypeArtifactId=baratine-maven-archetype -DgroupId=org.acme -DartifactId=MyApp -DarchetypeVersion=0.10.2 -DinteractiveMode=false`
 
 Note: change org.acme and MyApp to desired groupId and artifactId.
 

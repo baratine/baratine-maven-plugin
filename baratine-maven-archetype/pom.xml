@@ -12,13 +12,13 @@
   <description>Baratine Maven Archetype</description>
 
   <scm>
-    <url>git@github.com:baratine/baratine-maven-plugin.git</url>
+    <url>https://github.com/baratine/baratine-maven-plugin</url>
+    <connection>scm:git:https://github.com/baratine/baratine-maven-plugin.git</connection>
   </scm>
 
   <url>
-    https://github.com/baratine/baratine-maven-plugin/tree/master/baratine-maven-archetype
+    https://github.com/baratine/baratine-maven-plugin
   </url>
-
 
   <licenses>
     <license>
@@ -138,6 +138,16 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.4</version>
+        <configuration>
+          <inputEncoding>UTF-8</inputEncoding>
+          <outputEncoding>UTF-8</outputEncoding>
+        </configuration>
       </plugin>
 
     </plugins>
