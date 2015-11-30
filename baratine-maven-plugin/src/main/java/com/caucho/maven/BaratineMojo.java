@@ -180,7 +180,7 @@ public class BaratineMojo extends BaratineBaseMojo
     command.add(javaHome + "/bin/java");
     command.add("-cp");
     command.add(cp);
-    command.add("com.caucho.cli.baratine.BaratineCommandLine");
+    command.add("com.caucho.v5.cli.baratine.BaratineCommandLine");
 
     command.add("package");
     command.add("-o");
