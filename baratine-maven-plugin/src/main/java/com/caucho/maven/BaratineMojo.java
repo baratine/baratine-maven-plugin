@@ -61,9 +61,12 @@ public class BaratineMojo extends BaratineBaseMojo
   @Parameter(defaultValue = "${project.build.outputDirectory}", required = true)
   private File classesDirectory;
 
+  @Parameter(defaultValue = "web/")
+  private String web;
+
   /**
    * Provides a name for executable jar file.
-   *
+   * <p>
    * Defaults to concatenation of "executable-" and resulting artifact name.
    */
   @Parameter(required = false)
@@ -85,7 +88,7 @@ public class BaratineMojo extends BaratineBaseMojo
     if (executableName != null)
       return new File(outputDirectory, executableName);
     else
-     return new File(outputDirectory, "executable-" + barName + ".jar");
+      return new File(outputDirectory, "executable-" + barName + ".jar");
   }
 
   protected File getClassesDirectory()
@@ -105,7 +108,13 @@ public class BaratineMojo extends BaratineBaseMojo
     archiver.setOutputFile(bar);
 
     try {
+      File web = getWebDirectory();
+
+      if (web.exists())
+        this.archiver.addDirectory(web, this.web);
+
       File contentDirectory = getClassesDirectory();
+
       this.archiver.addDirectory(contentDirectory,
                                  "classes/",
                                  getIncludes(),
@@ -123,42 +132,27 @@ public class BaratineMojo extends BaratineBaseMojo
                                    + File.separatorChar);
 
       for (Object x : project.getArtifacts()) {
-        Artifact a = (Artifact) x;
+        Artifact artifact = (Artifact) x;
 
-        if (!"jar".equals(a.getType()))
-          continue;
+        final String type = artifact.getType();
 
-        if ("io.baratine".equals(a.getGroupId())) {
+        if ("js".equals(type)) {
+          addJs(artifact);
+        }
+        else if ("jar".equals(type)) {
+          addJar(artifact);
+        }
+        else {
           getLog().info("skipping artifact "
-                        + a.getId()
+                        + artifact.getId()
                         + ':'
-                        + a.getArtifactId()
+                        + artifact.getArtifactId()
                         + ':'
-                        + a.getSelectedVersion());
-
-          continue;
+                        + artifact.getSelectedVersion()
+                        + ':' + artifact.getType());
         }
 
-        File file = a.getFile();
-        String name = file.getName();
-
-        int lastSlash = name.lastIndexOf(File.separator);
-
-        if (lastSlash > -1)
-          name = name.substring(lastSlash + 1);
-
-        this.archiver.addFile(file, "lib/" + name);
       }
-
-      File web = new File(project.getBasedir(),
-                          "src"
-                          + File.separatorChar
-                          + "main"
-                          + File.separatorChar
-                          + "web");
-
-      if (web.exists())
-        this.archiver.addDirectory(web, "web/");
 
       archiver.createArchive(session, project, archive);
 
@@ -166,6 +160,50 @@ public class BaratineMojo extends BaratineBaseMojo
     } catch (Exception e) {
       throw new MojoExecutionException("Error assembling bar", e);
     }
+  }
+
+  private void addJar(Artifact artifact)
+  {
+    if ("io.baratine".equals(artifact.getGroupId()))
+      return;
+
+    File file = artifact.getFile();
+    String name = file.getName();
+
+    int lastSlash = name.lastIndexOf(File.separator);
+
+    if (lastSlash > -1)
+      name = name.substring(lastSlash + 1);
+
+    this.archiver.addFile(file, "lib/" + name);
+  }
+
+  private void addJs(Artifact artifact)
+  {
+    File file = artifact.getFile();
+    String name = file.getName();
+
+    if ("baratine-js".equals(artifact.getArtifactId()))
+      name = "baratine-js.js";
+
+    int lastSlash = name.lastIndexOf(File.separator);
+
+    if (lastSlash > -1)
+      name = name.substring(lastSlash + 1);
+
+    this.archiver.addFile(file, "web/" + name);
+  }
+
+  private File getWebDirectory()
+  {
+    File web = new File(project.getBasedir(),
+                        "src"
+                        + File.separatorChar
+                        + "main"
+                        + File.separatorChar
+                        + "web");
+
+    return web;
   }
 
   private void buildExecutable(File bar) throws MojoExecutionException

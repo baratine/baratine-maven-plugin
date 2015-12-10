@@ -13,7 +13,8 @@
 
   <scm>
     <url>https://github.com/baratine/baratine-maven-plugin</url>
-    <connection>scm:git:https://github.com/baratine/baratine-maven-plugin.git</connection>
+    <connection>scm:git:https://github.com/baratine/baratine-maven-plugin.git
+    </connection>
   </scm>
 
   <url>
@@ -45,6 +46,12 @@
     </repository>
   </distributionManagement>
 
+  <properties>
+    <groupId>{groupId}</groupId>
+    <artifactId>{artifactId}</artifactId>
+    <version>{version}</version>
+  </properties>
+
   <profiles>
     <profile>
       <id>publish</id>
@@ -72,6 +79,31 @@
   </profiles>
 
   <build>
+
+    <resources>
+
+      <resource>
+        <directory>
+          src/main/resources
+        </directory>
+        <includes>
+          <include>**/*</include>
+        </includes>
+        <filtering>false</filtering>
+      </resource>
+
+      <resource>
+        <directory>
+          src/main/resources
+        </directory>
+        <includes>
+          <include>archetype-resources/pom.xml</include>
+        </includes>
+        <filtering>true</filtering>
+
+      </resource>
+
+    </resources>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>

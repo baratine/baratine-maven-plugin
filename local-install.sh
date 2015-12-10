@@ -1,7 +1,11 @@
 #!/bin/bash
 
+VERSION=`cat VERSION`
 cd baratine-maven-archetype
-mvn -e clean install site
+mvn -DVERSION=$VERSION -e clean install
+
+#site
 
 cd ../baratine-maven-plugin
-mvn -e clean install site
+mvn -DVERSION=$VERSION -e clean install
+#site
