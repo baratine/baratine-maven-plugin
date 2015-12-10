@@ -6,7 +6,7 @@
 
   <groupId>io.baratine</groupId>
   <artifactId>baratine-maven-plugin</artifactId>
-  <version>0.10.2</version>
+  <version>${VERSION}</version>
 
   <name>Baratine Maven Plugin</name>
 
