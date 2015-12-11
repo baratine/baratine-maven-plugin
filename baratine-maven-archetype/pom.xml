@@ -100,7 +100,6 @@
           <include>archetype-resources/pom.xml</include>
         </includes>
         <filtering>true</filtering>
-
       </resource>
 
     </resources>
